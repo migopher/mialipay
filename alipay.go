@@ -44,6 +44,6 @@ func NewAlipay(appid string, alipayPublicKey string, merchantPrivateKey string, 
 
 func (a *Alipay) AlipayTradePay() *AlipayTradePay {
 	alipayTradePay := new(AlipayTradePay)
-	&alipayTradePay.Config = &a
+	alipayTradePay.Alipay = *a
 	return alipayTradePay
 }
