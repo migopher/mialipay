@@ -12,7 +12,7 @@ type AlipayTradePay struct {
 	Version      string
 	Format       string
 	AppAuthToken string
-	*Alipay
+	Config *Alipay
 	*BizContent
 }
 
