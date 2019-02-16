@@ -1,4 +1,4 @@
-package alipay
+package go_alipay
 
 /**
 alipay
