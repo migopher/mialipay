@@ -1,4 +1,4 @@
-package go_alipay
+package alipay
 
 import "time"
 
@@ -8,11 +8,11 @@ type AlipayTradePay struct {
 	method       string
 	Timestamp    string
 	format       string
-	charset		 string
+	charset      string
 	Version      string
 	Format       string
 	AppAuthToken string
-	*Alipay
+	alipay       *Alipay
 	*BizContent
 }
 
@@ -41,12 +41,11 @@ type BizContent struct {
 }
 
 func (atp *AlipayTradePay) init() {
-	atp.method=method_alipay_trade_pay
-	atp.format=format_json
-	atp.Timestamp=time.Now().Format("2006-01-02 15:04:05")
-	atp.Version=version
+	atp.method = method_alipay_trade_pay
+	atp.format = format_json
+	atp.Timestamp = time.Now().Format("2006-01-02 15:04:05")
+	atp.Version = version
 }
-
 
 //func (atp *AlipayTradePay) setBizContent() *BizContent {
 //	return atp.BizContent

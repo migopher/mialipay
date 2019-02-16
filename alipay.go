@@ -1,4 +1,4 @@
-package go_alipay
+package alipay
 
 /**
 alipay
@@ -6,7 +6,7 @@ alipay
 
 const (
 	version            = "1.0"
-	format_json string = "JSON",
+	format_json string = "JSON"
 )
 
 type Alipay struct {
@@ -26,8 +26,9 @@ type Alipay struct {
 	NotifyUrl string
 	//异步通知地址,只有扫码支付预下单可用
 	ReturnUrl string
-
 }
+
+
 
 func NewAlipay(appid string, alipayPublicKey string, merchantPrivateKey string, signType string, gatewayUrl string, notifyUrl string, returnUrl string) *Alipay {
 	alipay := &Alipay{
@@ -42,8 +43,8 @@ func NewAlipay(appid string, alipayPublicKey string, merchantPrivateKey string, 
 	return alipay
 }
 
-func (a *Alipay) AlipayTradePay() *AlipayTradePay {
-	alipayTradePay := new(AlipayTradePay)
-	&alipayTradePay.Alipay = &a
-	return alipayTradePay
+func (a *Alipay) Pay() *AlipayTradePay {
+	tradePay := &AlipayTradePay{}
+	&tradePay.alipay = &a
+	return tradePay
 }
