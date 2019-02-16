@@ -1,7 +1,5 @@
 package alipay
 
-import "time"
-
 const method_alipay_trade_pay string = "alipay.trade.pay"
 
 type AlipayTradePay struct {
@@ -29,24 +27,57 @@ type BizContent struct {
 	SettleCurrency     string
 	DiscountableAmount string
 	Body               string
-	GoodsDetail        string
+	GoodsDetail        *[]GoodsDetail
 	OperatorId         string
 	StoreId            string
 	TerminalId         string
-	ExtendParams       string
+	ExtendParams       *ExtendParams
 	TimeoutExpress     string
 	AuthConfirmMode    string
 	TerminalParams     string
-	PromoParams        string
+	PromoParams        *PromoParams
+}
+type ExtendParams struct {
+	SysServiceProviderId string
+	IndustryRefluxInfo   string
+	CardType             string
 }
 
-func (atp *AlipayTradePay) init() {
-	atp.method = method_alipay_trade_pay
-	atp.format = format_json
-	atp.Timestamp = time.Now().Format("2006-01-02 15:04:05")
-	atp.Version = version
+type GoodsDetail struct {
+	GoodsId        string
+	GoodsName      string
+	Quantity       string
+	Price          string
+	GoodsCategory  string
+	CategoriesTree string
+	Body           string
+	ShowUrl        string
 }
 
-//func (atp *AlipayTradePay) setBizContent() *BizContent {
-//	return atp.BizContent
-//}
+type PromoParams struct {
+	ActualOrderTime string
+}
+
+func (atp *AlipayTradePay) setBizContent(bizContent BizContent) {
+	*atp.BizContent = bizContent
+}
+
+func (bc *BizContent) setPromoParams(promoParams PromoParams) {
+	*bc.PromoParams = promoParams
+}
+
+func (bc *BizContent) setGoodsDetail(goodsDetail []GoodsDetail) {
+	*bc.GoodsDetail = goodsDetail
+}
+
+func (bc *BizContent) setExtendParams(extendParams ExtendParams) {
+	*bc.ExtendParams = extendParams
+}
+func (bc *BizContent) ToJson() string{
+	return ""
+}
+
+func (atp *AlipayTradePay)ToUrl() interface{} {
+
+	return nil
+}

@@ -1,5 +1,9 @@
 package alipay
 
+import (
+	"time"
+)
+
 /**
 alipay
  */
@@ -26,7 +30,10 @@ type Alipay struct {
 	NotifyUrl string
 	//异步通知地址,只有扫码支付预下单可用
 	ReturnUrl string
-
+}
+type Request interface {
+	Execute() interface{}
+	ToUrl()   interface{}
 }
 
 func NewAlipay(appid string, alipayPublicKey string, merchantPrivateKey string, signType string, gatewayUrl string, notifyUrl string, returnUrl string) *Alipay {
@@ -42,8 +49,23 @@ func NewAlipay(appid string, alipayPublicKey string, merchantPrivateKey string, 
 	return alipay
 }
 
+/**
+alipay.trade.pay
+ */
 func (a *Alipay) AlipayTradePay() *AlipayTradePay {
-	alipayTradePay := new(AlipayTradePay)
+	alipayTradePay := &AlipayTradePay{}
+	//alipayTradePay := new(AlipayTradePay)
 	alipayTradePay.Alipay = *a
+	alipayTradePay.method = method_alipay_trade_pay
+	alipayTradePay.format = format_json
+	alipayTradePay.Timestamp = time.Now().Format("2006-01-02 15:04:05")
+	alipayTradePay.Version = version
 	return alipayTradePay
 }
+
+
+
+//func (a *Alipay) Request() *AlipayTradePay {
+//	fmt.Println(1111)
+//	return  nil
+//}
