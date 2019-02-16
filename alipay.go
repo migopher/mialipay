@@ -55,7 +55,7 @@ alipay.trade.pay
 func (a *Alipay) AlipayTradePay() *AlipayTradePay {
 	alipayTradePay := &AlipayTradePay{}
 	//alipayTradePay := new(AlipayTradePay)
-	alipayTradePay.Alipay = *a
+	alipayTradePay.Alipay = a
 	alipayTradePay.method = method_alipay_trade_pay
 	alipayTradePay.format = format_json
 	alipayTradePay.Timestamp = time.Now().Format("2006-01-02 15:04:05")
