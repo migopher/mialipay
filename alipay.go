@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -19,7 +20,7 @@ alipay
 
 const (
 	version            = "1.0"
-	format_json string = "JSON"
+	format_json string = "json"
 )
 
 type Alipay struct {
@@ -70,7 +71,7 @@ func (ali *Alipay) AlipayTradePay() *AlipayTradePay {
 	alipayTradePay := &AlipayTradePay{}
 	//alipayTradePay := new(AlipayTradePay)
 	alipayTradePay.Alipay = ali
-	alipayTradePay.Format = "JSON"
+	alipayTradePay.Format = "json"
 	alipayTradePay.method = method_alipay_trade_pay
 	alipayTradePay.Timestamp = time.Now().Format("2006-01-02 15:04:05")
 	alipayTradePay.Version = version
@@ -95,11 +96,13 @@ func GetRequest(url string) (string, error) {
 build Sign
 */
 func BuildSign(strSign string, priveKey string) string {
-	result := Filter(strSign)
-	key, _ := base64.StdEncoding.DecodeString(result)
-	privateKey, _ := x509.ParsePKCS1PrivateKey([]byte(priveKey))
+	result := FilterUrl(strSign)
+	result,_=url.QueryUnescape(result)
+	fmt.Println("sign=",result)
+	key, _ := base64.StdEncoding.DecodeString(priveKey)
+	privateKey, _ := x509.ParsePKCS1PrivateKey([]byte(key))
 	hash := sha256.New()
-	hash.Write([]byte(key))
+	hash.Write([]byte(result))
 	signature, _ := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hash.Sum(nil))
 	signatureHex := base64.StdEncoding.EncodeToString(signature)
 	return signatureHex
@@ -108,8 +111,8 @@ func BuildSign(strSign string, priveKey string) string {
 /**
 filter parameter sort
 */
-func Filter(quer string) string {
-	pars, _ := url.ParseQuery(quer)
+func FilterUrl(strSign string) string {
+	pars, _ := url.ParseQuery(strSign)
 	newPare := url.Values{}
 	for k, v := range pars {
 		if v[0] != "" {
@@ -117,6 +120,22 @@ func Filter(quer string) string {
 		}
 	}
 	str := newPare.Encode()
+	//re,_:=url.QueryUnescape(str)
 	return str
+}
+/**
+filter parameter sort
+*/
+func URLEncoder(strSign string) string {
+	pars, _ := url.ParseQuery(strSign)
+	//newPare := url.Values{}
+	urlstr:=""
+	for k, v := range pars {
+		if v[0] != "" {
+			urlstr+=k+"="+url.QueryEscape(v[0])+"&"
+			//newPare.Set(k, v[0])
+		}
+	}
+	return urlstr
 }
 

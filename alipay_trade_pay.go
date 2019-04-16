@@ -3,6 +3,7 @@ package mialipay
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 const method_alipay_trade_pay string = "alipay.trade.pay"
@@ -16,7 +17,7 @@ type AlipayTradePay struct {
 	Format       string
 	AppAuthToken string
 	*Alipay
-	BizContent BizContent
+	BizContent
 }
 
 type BizContent struct {
@@ -27,7 +28,7 @@ type BizContent struct {
 	Subject            string         `json:"subject,omitempty"`
 	BuyerId            string         `json:"buyer_id,omitempty"`
 	SellerId           string         `json:"seller_id,omitempty"`
-	TotalAmount        string         `json:"total_amount,omitempty"`
+	TotalAmount        int64         `json:"total_amount,omitempty"`
 	TransCurrency      string         `json:"trans_currency,omitempty"`
 	SettleCurrency     string         `json:"settle_currency,omitempty"`
 	DiscountableAmount string         `json:"discountable_amount,omitempty"`
@@ -64,10 +65,15 @@ type PromoParams struct {
 }
 
 func (atp *AlipayTradePay) BuildUrl() string {
-	biz,_:=atp.BizContent.ToJson()
+	biz, _ := atp.BizContent.ToJson()
 	strUrl := fmt.Sprintf(alipay_common_parame, atp.AppId, method_alipay_trade_pay, atp.Format, atp.Charset, atp.SignType, atp.Timestamp, atp.Version, atp.NotifyUrl, atp.AppAuthToken, biz)
-	ccc := BuildSign(strUrl, atp.MerchantPrivateKey)
-	return atp.GatewayUrl + "?" + strUrl + "&sign=" + ccc
+	//signUrl := fmt.Sprintf(alipay_common_parame, atp.AppId, method_alipay_trade_pay, atp.Format, atp.Charset, "", atp.Timestamp, atp.Version, atp.NotifyUrl, atp.AppAuthToken, biz)
+	strUrl = FilterUrl(strUrl)
+	fmt.Println("排序结果", strUrl)
+	sign := BuildSign(strUrl, atp.MerchantPrivateKey)
+	v, _ := url.ParseQuery(strUrl)
+	fmt.Println(v.Encode())
+	return atp.GatewayUrl + "?" + v.Encode() + "&sign=" + sign
 }
 
 func (atp *AlipayTradePay) SetBizContent(bizContent BizContent) {
