@@ -28,7 +28,7 @@ type BizContent struct {
 	Subject            string         `json:"subject,omitempty"`
 	BuyerId            string         `json:"buyer_id,omitempty"`
 	SellerId           string         `json:"seller_id,omitempty"`
-	TotalAmount        int64         `json:"total_amount,omitempty"`
+	TotalAmount        float64         `json:"total_amount,omitempty"`
 	TransCurrency      string         `json:"trans_currency,omitempty"`
 	SettleCurrency     string         `json:"settle_currency,omitempty"`
 	DiscountableAmount string         `json:"discountable_amount,omitempty"`
